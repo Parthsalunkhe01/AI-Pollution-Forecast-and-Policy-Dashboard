@@ -1,2 +1,121 @@
 # AI-Pollution-Forecast-and-Policy-Dashboard
 AI‑driven system using satellite, ground, and IoT data to identify pollution sources, forecast air quality 72 hours ahead, and generate policy insights through interactive dashboards.
+
+## Project Workflow
+AI-Pollution-Forecast-and-Policy-Dashboard/
+│
+├── backend/                                # Backend & APIs (Backend Lead)
+│   ├── api/
+│   │   ├── routes/
+│   │   │   ├── aqidata.js
+│   │   │   ├── forecast.js
+│   │   │   ├── auth.js
+│   │   └── controllers/
+│   ├── config/
+│   │   ├── db.js
+│   │   └── .env.example
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── AQIData.js
+│   │   └── Forecast.js
+│   ├── middleware/
+│   │   ├── auth.js
+│   │   └── errorHandler.js
+│   ├── logs/
+│   ├── tests/
+│   └── server.js
+│
+├── frontend/
+│   ├── web-dashboard/                      # Web Dashboard (Member 2)
+│   │   ├── public/
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   │   ├── AQICard.js
+│   │   │   │   ├── ForecastChart.js
+│   │   │   │   ├── Navbar.js
+│   │   │   ├── pages/
+│   │   │   │   ├── Home.js
+│   │   │   │   ├── Login.js
+│   │   │   ├── utils/
+│   │   │   │   └── api.js
+│   │   ├── tailwind.config.js
+│   │   └── package.json
+│   │
+│   ├── mobile-app/                         # Mobile App (Member 3)
+│   │   ├── components/
+│   │   │   ├── AQIStatusCard.jsx
+│   │   │   ├── LoginForm.jsx
+│   │   ├── screens/
+│   │   │   ├── HomeScreen.jsx
+│   │   │   ├── NotificationScreen.jsx
+│   │   ├── api/
+│   │   │   └── index.js
+│   │   ├── App.js
+│   │   └── app.json
+│
+├── model_and_forecast/                     # ML Engineer (Member 5)
+│   ├── data/
+│   │   ├── raw/
+│   │   ├── processed/
+│   │   └── AQI_CPCB_OpenAQ.csv
+│   ├── notebooks/
+│   │   ├── EDA.ipynb
+│   │   ├── Model_Training.ipynb
+│   │   └── SHAP_Analysis.ipynb
+│   ├── models/
+│   │   ├── model.pkl
+│   │   └── metrics.json
+│   ├── scripts/
+│   │   ├── data_cleaning.py
+│   │   ├── train_model.py
+│   │   ├── evaluate.py
+│   └── README.md
+│
+├── analytics_dashboard/                    # Analytics Developer
+│   ├── powerbi/
+│   │   ├── Source_Contribution.pbix
+│   │   └── AQI_Trends.pbix
+│   ├── visuals/
+│   │   ├── pollution_trends.png
+│   │   └── heatmaps/
+│   └── backend_connectors/
+│       ├── aqi_dataset_api.json
+│       └── forecasting_api.json
+│
+├── api_integration/                        # API Integration Engineer
+│   ├── schema/
+│   │   ├── aqi_endpoints.yaml
+│   │   ├── forecast_endpoints.yaml
+│   ├── microservices/
+│   │   ├── source_ingestion/
+│   │   ├── wearable_data/
+│   │   │   ├── google_fit/
+│   │   │   ├── apple_healthkit/
+│   │   │   └── BLE/
+│   ├── utils/
+│   │   ├── data_sync.py
+│   │   └── event_logs.py
+│   └── README.md
+│
+├── deployment/
+│   ├── docker/
+│   │   ├── Dockerfile.backend
+│   │   ├── Dockerfile.frontend
+│   │   └── docker-compose.yml
+│   ├── scripts/
+│   │   ├── deploy_backend.sh
+│   │   ├── deploy_frontend.sh
+│   ├── netlify/
+│   │   └── netlify.toml
+│   ├── vercel/
+│   │   └── vercel.json
+│   └── README.md
+│
+├── docs/
+│   ├── README.md
+│   ├── API_Guide.md
+│   ├── Architecture_Diagram.png
+│   ├── Project_Overview.pdf
+│   └── Workload_Air_Pollution.xlsx
+│
+└── README.md

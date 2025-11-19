@@ -1,0 +1,192 @@
+🌫 1. AQI & Pollutant Concentration (CPCB / NAMP)
+Why:
+
+Ground-truth AQI
+
+Calibrates satellite data
+
+Used by govt (your PPT mentions CPCB, NAMP)
+
+Source Options:
+✔ CPCB (Central Pollution Control Board)
+
+API: https://app.cpcbccr.com
+
+Data: PM2.5, PM10, NO₂, SO₂, CO, O₃
+
+You can download hourly datasets from:
+→ https://app.cpcbccr.com/ccr/#/caaqm-dashboard-all/caaqm-landing
+
+✔ NAMP (National Air Monitoring Programme)
+
+Backup quality assurance data
+Used for validation
+Govt trusted source
+
+
+2. Fire Hotspots (NASA FIRMS)
+Why:
+
+To detect stubble burning, a major SIH requirement.
+
+Your PPT specifically mentions FIRMS.
+
+Source:
+
+NASA FIRMS (MODIS / VIIRS)
+Link: https://firms.modaps.eosdis.nasa.gov/download/
+
+Data format:
+
+CSV
+
+Shapefile
+
+What you download:
+✔ Daily VIIRS fire points
+✔ Region: India → Punjab / Haryana / NCR
+
+🛰 3. Satellite Pollutants (TROPOMI – Sentinel-5P)
+Why:
+
+This detects NO₂, CO, SO₂ from traffic + industrial pollution
+Your PPT mentions TROPOMI explicitly.
+
+Source:
+
+Copernicus Open Data Hub
+https://dataspace.copernicus.eu/
+
+Dataset:
+
+Sentinel-5P TROPOMI
+
+Variables: NO₂, CO, SO₂, O₃, AOD
+
+Format:
+
+NetCDF (.nc) → you can convert to CSV
+
+Search:
+
+Product: S5P_OFFL_L2__NO2____
+Region: Delhi, NCR
+
+🌬 4. Weather Data (ERA5 or IMD)
+Why:
+
+Weather drives 40–60% of AQI variation.
+
+Your PPT mentions:
+
+SAFAR workflows
+
+Govt EWS (Early Warning Systems)
+
+CAMS & ERA5
+
+Sources:
+✔ ERA5 (ECMWF Reanalysis)
+
+Link: https://cds.climate.copernicus.eu
+
+Variables you need:
+
+temp
+
+humidity
+
+wind_speed
+
+wind_direction
+
+boundary layer height
+
+✔ IMD (Indian Meteorological Department)
+
+Optional backup for:
+
+humidity
+
+temperature
+
+🔮 5. Global Chemical Predictions (CAMS – Copernicus Atmosphere Monitoring Service)
+Why:
+
+CAMS gives 1–3 day forecasts
+
+PPT mentions CAMS clearly
+
+Source:
+https://ads.atmosphere.copernicus.eu/cdsapp#!/dataset/cams-global-atmospheric-composition-forecasts
+
+Download:
+
+PM2.5
+
+PM10
+
+NO₂
+
+O₃
+
+Format:
+
+GRIB or NetCDF
+
+🚗 6. Traffic Emission Proxy Dataset
+
+Your PPT mentions:
+
+"FIRMS maps fires; TROPOMI maps traffic/industry"
+
+Since govt free API for traffic does not exist, use:
+
+Option A (Recommended)
+
+✔ Use TROPOMI NO₂ columns
+NO₂ = traffic + industry, very good indicator
+Matches PPT statement
+Directly tied with “What sets us apart” slide.
+
+Option B (If needed)
+
+Generate synthetic hourly traffic dataset:
+
+Peak: 9 AM, 6 PM
+
+Off-peak: night hours
+
+Weekends low
+
+File: traffic_index.csv
+
+7. SAFAR / Delhi EWS (Early Warning System) Data
+
+Your PPT specifically says:
+
+SAFAR workflows lower setup cost
+Delhi EWS/SAFAR data ready to automate
+
+SAFAR provides:
+
+Forecasts
+
+Source apportionment (dust, vehicular, stubble, industry)
+
+AQI bulletins
+
+Source:
+https://ews.tropmet.res.in/
+
+Data format:
+
+PDF bulletins (daily)
+
+Forecast CSVs
+
+You can use:
+
+Previous SAFAR forecasts as training feature
+
+SAFAR source contributions for validation

@@ -36,8 +36,7 @@ model_and_forecast/models/*.pkl
 model_and_forecast/models/*.h5
 model_and_forecast/models/*.pt
 model_and_forecast/data/raw/*
-*.csv
-*.xlsx
+
 
 # React Native / Mobile App
 expo-debug.log
@@ -67,3 +66,5 @@ Thumbs.db
 # Reports and Docs Backup
 docs/*.pdf~
 docs/Workload_Air_Pollution.xlsx
+backend/
+

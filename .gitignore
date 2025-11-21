@@ -37,6 +37,8 @@ model_and_forecast/models/*.h5
 model_and_forecast/models/*.pt
 model_and_forecast/data/raw/*
 
+ML/Raw/test.ipynb
+
 
 # React Native / Mobile App
 expo-debug.log

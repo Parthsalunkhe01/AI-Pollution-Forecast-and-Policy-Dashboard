@@ -37,8 +37,11 @@ model_and_forecast/models/*.h5
 model_and_forecast/models/*.pt
 model_and_forecast/data/raw/*
 
-ML/Raw/test.ipynb
-
+ML/Raw/*
+ML/Processed/Stubble_data/*
+ML/Processed/Weather_Data/*
+ML/Processed/test.ipynb
+ML/TROPOMI/Tropomi.ipynb
 
 # React Native / Mobile App
 expo-debug.log

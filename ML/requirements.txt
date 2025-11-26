@@ -1,0 +1,24 @@
+# Core scientific stack
+numpy
+pandas
+scikit-learn
+xgboost
+shap
+
+# Visualization
+matplotlib
+seaborn
+
+# Utilities
+joblib
+tqdm
+python-dotenv
+
+# Notebook tools
+jupyter
+notebook
+
+# API (FastAPI microservice)
+fastapi
+uvicorn
+pydantic

@@ -38,10 +38,8 @@ model_and_forecast/models/*.pt
 model_and_forecast/data/raw/*
 
 ML/Raw/*
-ML/Processed/Stubble_data/viirs_delhi_ncr_processed_2024.csv
-ML/Processed/Weather_Data/*
-ML/Processed/test.ipynb
-ML/TROPOMI/Tropomi.ipynb
+ML/Processed/*
+ML/Training_Data/*
 
 # React Native / Mobile App
 expo-debug.log

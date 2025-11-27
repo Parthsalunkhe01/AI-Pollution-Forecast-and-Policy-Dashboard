@@ -1,4 +1,63 @@
 # Ignore all environment files
 *.env
 .env
-**/.env
+.env.local
+.env.production
+.env.development
+*.tgz
+
+# Python / FastAPI / ML
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.env
+.venv/
+env/
+venv/
+instance/
+.pytest_cache/
+.ipynb_checkpoints/
+*.log
+.DS_Store
+
+# Model & Data
+model_and_forecast/models/*.pkl
+model_and_forecast/models/*.h5
+model_and_forecast/models/*.pt
+model_and_forecast/data/raw/*
+
+ML/Raw/*
+ML/Processed/*
+ML/Training_Data/*
+
+# React Native / Mobile App
+expo-debug.log
+*.apk
+*.aab
+*.ipa
+ios/build/
+android/app/build/
+android/.gradle/
+
+# Power BI / Visualization
+analytics_dashboard/powerbi/*.pbix
+
+# Deployment / Container
+docker-compose.override.yml
+*.swp
+*.tmp
+*.bak
+
+# Editor & System Files
+.vscode/
+.idea/
+*.iml
+Thumbs.db
+.DS_Store
+
+# Reports and Docs Backup
+docs/*.pdf~
+docs/Workload_Air_Pollution.xlsx
+backend/

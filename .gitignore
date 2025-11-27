@@ -1,14 +1,5 @@
-# Node.js / JavaScript
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-lock.yaml
-package-lock.json
-coverage/
-dist/
-build/
-.cache/
+# Ignore all environment files
+*.env
 .env
 .env.local
 .env.production
@@ -70,4 +61,3 @@ Thumbs.db
 docs/*.pdf~
 docs/Workload_Air_Pollution.xlsx
 backend/
-

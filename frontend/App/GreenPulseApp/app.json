@@ -1,0 +1,53 @@
+{
+  "expo": {
+    "name": "GreenPulseApp",
+    "slug": "GreenPulseApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "greenpulseapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+
+    "ios": {
+      "supportsTablet": true
+    },
+
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#E6F4FE"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.anonymous.GreenPulseApp"
+    },
+
+    "web": {
+      "output": "static",
+      "favicon": "./assets/icon.png"
+    },
+
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#ffffff",
+          "dark": {
+            "backgroundColor": "#000000"
+          }
+        }
+      ],
+      "expo-font"
+    ],
+
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
+}

@@ -1,27 +1,34 @@
-import express from 'express';
-import pool from '../../config/db.js';
-import logger from "../../logs/logger.js";
-try{
+import express from "express";
+import prisma from "../../config/prisma.js";
+
 const router = express.Router();
 
-// Test API
-router.get('/ping', (req, res) => {
-  res.json({ message: 'Server is running fine' });
-});
-
-// Get AQI data
-router.get('/get_aqi', async (req, res) => {
+// Fix: Allow GET on both /api/aqi and /api/aqi/
+router.get(["/", ""], async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM aqi_data');
-    res.json(result.rows);
+    const all = await prisma.aqiData.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 200
+    });
+    res.json({ success: true, data: all });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Database error' });
+    res.status(500).json({ success: false });
   }
 });
-}
- catch (err) {
-  logger.error(err.message);
-  res.status(500).json({ error: "Server error" });
-}
+
+// Save AQI
+router.post("/save", async (req, res) => {
+  try {
+    const { city, stationName, value, category } = req.body;
+
+    const row = await prisma.aqiData.create({
+      data: { city, stationName, aqiValue: value, category }
+    });
+
+    res.json({ success: true, row });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 export default router;

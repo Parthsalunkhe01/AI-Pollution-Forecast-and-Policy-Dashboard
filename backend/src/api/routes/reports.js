@@ -1,89 +1,103 @@
-const router = require("express").Router();
-const prisma = require("../config/prisma");
-const { authenticateJWT } = require("../middleware/auth");
-const { uploadBase64Image } = require("../services/s3Service");
+import express from "express";
+import prisma from "../../config/prisma.js";
+import { authenticateJWT } from "../../middleware/auth.js";
+import fs from "fs";
 
+const router = express.Router();
+
+// -------------------------------------------------------------
 // CREATE REPORT
-router.post("/", authenticateJWT, async (req, res, next) => {
+// -------------------------------------------------------------
+router.post("/", authenticateJWT, async (req, res) => {
   try {
-    const { title, description, city, lat, lon, aqiSnapshot, safeHours, imageBase64 } = req.body;
-
-    let imageUrl = null;
-    if (imageBase64) imageUrl = await uploadBase64Image(imageBase64);
+    const { title, description, city, stationName } = req.body;
 
     const report = await prisma.report.create({
       data: {
-        userId: req.userId,
         title,
         description,
         city,
-        lat,
-        lon,
-        aqiSnapshot,
-        safeHours,
-        imageUrl,
+        stationName,
+        status: "pending",
+        user: { connect: { id: req.userId } }
+      },
+    });
+
+    return res.json({ success: true, report });
+  } catch (err) {
+    console.error("Report create error:", err);
+    res.status(500).json({ success: false, message: "Failed to create report" });
+  }
+});
+
+// -------------------------------------------------------------
+// GET ALL REPORTS
+// -------------------------------------------------------------
+router.get("/", async (_, res) => {
+  try {
+    const reports = await prisma.report.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { id: true, displayName: true } }
       }
     });
 
-    res.json(report);
-  } catch (err) { next(err); }
-});
-// GET FEED
-router.get("/", authenticateJWT, async (req, res, next) => {
-  try {
-    const reports = await prisma.report.findMany({
-      include: {
-        user: { select: { displayName: true } },
-        comments: true,
-        likes: true
-      },
-      orderBy: { createdAt: "desc" },
-      take: 50
-    });
-
-    res.json(reports);
-  } catch (err) { next(err); }
+    return res.json(reports); // return array only
+  } catch (err) {
+    console.error("Reports fetch error:", err);
+    res.status(500).json({ success: false, message: "Failed to fetch reports" });
+  }
 });
 
-// SINGLE REPORT
-router.get("/:id", authenticateJWT, async (req, res, next) => {
+// -------------------------------------------------------------
+// GET REPORT BY ID (🔥 REQUIRED FOR REPORT DETAILS SCREEN)
+// -------------------------------------------------------------
+router.get("/:id", async (req, res) => {
   try {
     const report = await prisma.report.findUnique({
       where: { id: req.params.id },
-      include: { user: true, comments: true, likes: true }
+      include: {
+        user: { select: { id: true, displayName: true } },
+        comments: true,
+        likes: true
+      }
     });
 
-    if (!report) return res.status(404).json({ message: "Not found" });
-    res.json(report);
-  } catch (err) { next(err); }
+    if (!report) {
+      return res.status(404).json({ success: false, message: "Report not found" });
+    }
+
+    return res.json({ success: true, report });
+  } catch (err) {
+    console.error("Get single report error:", err);
+    res.status(500).json({ success: false, message: "Failed to fetch report" });
+  }
 });
 
-// UPDATE REPORT
-router.put("/:id", authenticateJWT, async (req, res, next) => {
-  try {
-    const report = await prisma.report.findUnique({ where: { id: req.params.id } });
-    if (!report) return res.status(404).json({ message: "Not found" });
-    if (report.userId !== req.userId) return res.status(403).json({ message: "Forbidden" });
-
-    const updated = await prisma.report.update({
-      where: { id: req.params.id },
-      data: req.body
-    });
-
-    res.json(updated);
-  } catch (err) { next(err); }
-});
-
+// -------------------------------------------------------------
 // DELETE REPORT
-router.delete("/:id", authenticateJWT, async (req, res, next) => {
+// -------------------------------------------------------------
+router.delete("/:id", authenticateJWT, async (req, res) => {
   try {
-    const report = await prisma.report.findUnique({ where: { id: req.params.id } });
-    if (!report) return res.status(404).json({ message: "Not found" });
-    if (report.userId !== req.userId) return res.status(403).json({ message: "Forbidden" });
+    const id = req.params.id;
 
-    await prisma.report.delete({ where: { id: req.params.id } });
-    res.json({ message: "Deleted" });
-  } catch (err) { next(err); }
+    const report = await prisma.report.findUnique({ where: { id } });
+    if (!report) {
+      return res.status(404).json({ success: false, message: "Report not found" });
+    }
+
+    if (report.imageUrl) {
+      const imgPath = "." + report.imageUrl;
+      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+    }
+
+    await prisma.report.delete({ where: { id } });
+
+    return res.json({ success: true, message: "Report deleted" });
+  } catch (err) {
+    console.error("Delete error:", err);
+    res.status(500).json({ success: false, message: "Failed to delete report" });
+  }
 });
 
-module.exports = router;
+export default router;

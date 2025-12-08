@@ -5,6 +5,10 @@
 .env.production
 .env.development
 *.tgz
+*.zip
+*.ZIP
+
+
 
 # Python / FastAPI / ML
 __pycache__/

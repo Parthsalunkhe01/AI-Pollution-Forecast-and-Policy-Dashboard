@@ -20,7 +20,13 @@
       },
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "package": "com.anonymous.GreenPulseApp"
+      "package": "com.anonymous.GreenPulseApp",
+
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyD1KQo_8D779TM3XXdhC46STdl4iYSCVpo"
+        }
+      }
     },
 
     "web": {

@@ -1,7 +1,8 @@
-const { PrismaClient } = require("@prisma/client");
+// src/config/prisma.js
 
-const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"]
-});
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 
-module.exports = prisma;
+const prisma = new PrismaClient();
+
+export default prisma;

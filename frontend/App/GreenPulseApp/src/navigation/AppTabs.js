@@ -32,5 +32,5 @@ export default function AppTabs(){
       <Tab.Screen name="Community" component={CommunityScreen} options={{ tabBarLabel: ({focused}) => <TabLabel label="Community" focused={focused}/> }} />
       <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: ({focused}) => <TabLabel label="Profile" focused={focused}/> }} />
     </Tab.Navigator>
-  );
+  );
 }

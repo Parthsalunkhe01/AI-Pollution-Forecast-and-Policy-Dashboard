@@ -1,39 +1,66 @@
 // src/components/HealthAlertCard.js
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { RADIUS, SPACING } from '../constants/theme';
 
-export default function HealthAlertCard({ onTips = ()=>{} }) {
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS } from "../constants/theme";
+
+export default function HealthAlertCard({ aqi = 0, health }) {
+  if (!health) {
+    return (
+      <Text style={{ color: COLORS.muted, fontSize: 13 }}>
+        Health advisory will appear once data is loaded.
+      </Text>
+    );
+  }
+
   return (
-    <View style={styles.card}>
-      <Text style={styles.title}>Health Alert</Text>
-      <Text style={styles.body}>High pollution — wear masks, avoid outdoor exercise in peak hours.</Text>
+    <View>
+      <View style={[styles.chip, { backgroundColor: `${health.color}22` }]}>
+        <Text style={[styles.chipText, { color: health.color }]}>
+          {health.level} AQI · AQI: {Math.round(Number(aqi) || 0)}
+        </Text>
+      </View>
 
-      <View style={{flexDirection:'row', marginTop: SPACING.md}}>
-        <TouchableOpacity style={styles.ghostBtn} onPress={onTips} activeOpacity={0.8}>
-          <Text style={{fontWeight:'700'}}>View Tips</Text>
-        </TouchableOpacity>
+      <Text style={styles.message}>{health.message}</Text>
+
+      <View style={{ marginTop: 10 }}>
+        <Text style={styles.subTitle}>Mask Advice</Text>
+        <Text style={styles.subText}>{health.mask}</Text>
+      </View>
+
+      <View style={{ marginTop: 10 }}>
+        <Text style={styles.subTitle}>Outdoor Safety Index</Text>
+        <Text style={styles.subText}>
+          {health.outdoorIndex}/10 — higher is safer.
+        </Text>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  card: {
-    backgroundColor: '#FF6950',
-    borderRadius: RADIUS.lg,
-    padding: SPACING.md,
-    shadowColor: '#FDECEA',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.25,
-    elevation: 2
+  chip: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginBottom: 10,
   },
-  title: { color: '#fff', fontSize: 18, fontWeight: '800', marginBottom: 8 },
-  body: { color: '#fff', opacity: 0.95 },
-  ghostBtn: {
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    paddingVertical: 10,
-    paddingHorizontal: 14,
-    borderRadius: RADIUS.md,
-    marginRight: 12
-  }
+  chipText: {
+    fontSize: 12,
+    fontWeight: "800",
+  },
+  message: {
+    fontSize: 14,
+    color: "#111827",
+  },
+  subTitle: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: "#374151",
+  },
+  subText: {
+    fontSize: 13,
+    color: "#4B5563",
+  },
 });

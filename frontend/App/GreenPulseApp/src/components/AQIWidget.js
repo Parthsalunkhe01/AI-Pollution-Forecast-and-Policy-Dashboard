@@ -1,52 +1,100 @@
 // src/components/AQIWidget.js
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS, RADIUS, SPACING } from '../constants/theme';
 
-export default function AQIWidget({ data = {}, onPress = () => {} }) {
-  const aqi = data?.aqi ?? 45;
-  const location = data?.location ?? 'Unknown';
-  const category = aqi <= 50 ? 'Good' : aqi <= 100 ? 'Moderate' : aqi <= 200 ? 'Unhealthy' : 'Hazardous';
+import React from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { COLORS } from "../constants/theme";
 
-  const getPillColor = () => {
-    if (aqi <= 50) return COLORS.success;
-    if (aqi <= 100) return COLORS.warning;
-    if (aqi <= 200) return '#F97316';
-    return COLORS.danger;
-  };
+export default function AQIWidget({ aqi = 0, location = "Unknown" }) {
+  const level =
+    aqi <= 50
+      ? "Good"
+      : aqi <= 100
+      ? "Satisfactory"
+      : aqi <= 200
+      ? "Moderate"
+      : aqi <= 300
+      ? "Poor"
+      : aqi <= 400
+      ? "Very Poor"
+      : "Severe";
+
+  const pillColor =
+    aqi <= 50
+      ? "#DCFCE7"
+      : aqi <= 100
+      ? "#ECFCCB"
+      : aqi <= 200
+      ? "#FEF3C7"
+      : aqi <= 300
+      ? "#FFEDD5"
+      : aqi <= 400
+      ? "#FEE2E2"
+      : "#FECACA";
 
   return (
-    <TouchableOpacity style={styles.container} activeOpacity={0.95} onPress={onPress}>
-      <View style={styles.row}>
-        <View>
-          <Text style={styles.label}>Current AQI</Text>
-          <Text style={[styles.aqi, { color: getPillColor() }]}>{aqi}</Text>
-        </View>
-        <View style={{ alignItems: 'flex-end' }}>
-          <Text style={styles.smallLabel}>Location</Text>
-          <Text style={styles.locationText}>{location}</Text>
-          <View style={[styles.pill, { backgroundColor: getPillColor() + '22' }]}>
-            <Text style={[styles.pillText, { color: getPillColor() }]}>{category}</Text>
-          </View>
+    <View style={styles.row}>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.label}>Current AQI</Text>
+        <Text style={styles.value}>{Math.round(Number(aqi) || 0)}</Text>
+        <View style={[styles.pill, { backgroundColor: pillColor }]}>
+          <Text style={styles.pillText}>{level}</Text>
         </View>
       </View>
-    </TouchableOpacity>
+
+      <View style={styles.divider} />
+
+      <View style={{ flex: 1, paddingLeft: 12 }}>
+        <Text style={styles.label}>Location</Text>
+        <Text style={styles.location} numberOfLines={2}>
+          📍 {location || "Unknown"}
+        </Text>
+        <Text style={styles.smallHint}>Updated just now</Text>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.card,
-    borderRadius: RADIUS.md,
-    padding: SPACING.md,
-    shadowColor: COLORS.shadow,
-    elevation: 3,
-    marginVertical: SPACING.sm,
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
   },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  label: { color: '#94A3B8', fontSize: 12 },
-  aqi: { fontSize: 36, fontWeight: '800' },
-  smallLabel: { color: '#94A3B8', fontSize: 12 },
-  locationText: { color: COLORS.text, fontWeight: '700', marginTop: 4 },
-  pill: { paddingHorizontal: 10, paddingVertical: 6, borderRadius: 999, marginTop: 6 },
-  pillText: { fontWeight: '700', fontSize: 12 },
+  label: {
+    fontSize: 12,
+    color: "#6B7280",
+    marginBottom: 2,
+  },
+  value: {
+    fontSize: 32,
+    fontWeight: "900",
+    color: COLORS.primary,
+  },
+  pill: {
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 999,
+    marginTop: 6,
+  },
+  pillText: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: "#111827",
+  },
+  divider: {
+    width: 1,
+    height: 52,
+    backgroundColor: "#E5E7EB",
+    marginHorizontal: 8,
+  },
+  location: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#111827",
+  },
+  smallHint: {
+    marginTop: 6,
+    fontSize: 11,
+    color: "#9CA3AF",
+  },
 });

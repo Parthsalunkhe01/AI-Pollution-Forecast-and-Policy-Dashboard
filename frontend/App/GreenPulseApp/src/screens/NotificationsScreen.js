@@ -61,5 +61,5 @@ const styles = StyleSheet.create({
   cardTitle: { fontWeight: '700' },
   cardTime: { color: COLORS.muted, marginTop: 6 },
   viewBtn: { paddingHorizontal: 8, paddingVertical: 6 },
-  empty: { padding: SPACING.md, alignItems: 'center' },
+  empty: { padding: SPACING.md, alignItems:'center'},
 });

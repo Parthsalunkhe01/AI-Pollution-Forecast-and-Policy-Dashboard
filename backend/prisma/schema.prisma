@@ -1,38 +1,35 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url = env(DATABASE_URL)
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id             String        @id @default(uuid())
-  email          String        @unique
+  id             String  @id @default(uuid())
+  email          String  @unique
   passwordHash   String?
-  firebaseUid    String?       @unique
+  firebaseUid    String? @unique
   displayName    String?
-  greenCredits   Int           @default(0)
-  totalFootprint Int           @default(0)
+  greenCredits   Int     @default(0)
+  totalFootprint Int     @default(0)
+  role           String  @default("user") // "user" | "admin"
+  reports       Report[]
+  comments      Comment[]
+  likes         Like[]
+  actions       Action[]
+  refreshTokens RefreshToken[]
+  notifications Notification[]
 
-  reports        Report[]
-  comments       Comment[]
-  likes          Like[]
-  actions        Action[]
-  refreshTokens  RefreshToken[]
-  notifications  Notification[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  points Int     @default(0)
+  title  String?
 }
+
 model RefreshToken {
   id        String   @id @default(uuid())
   token     String   @unique
@@ -43,17 +40,22 @@ model RefreshToken {
 }
 
 model Report {
-  id          String     @id @default(uuid())
-  user        User       @relation(fields: [userId], references: [id])
+  id          String   @id @default(uuid())
+  user        User     @relation(fields: [userId], references: [id])
   userId      String
+
   title       String
   description String?
   city        String?
+  stationName String?      // ⭐ ADDED
+  status      String @default("pending")   // ⭐ ADDED
+
   lat         Float?
   lon         Float?
   aqiSnapshot Json?
   safeHours   Json?
-  imageUrl    String?
+
+  imageUrl    String?      // ⭐ Store uploaded media path
 
   likes       Like[]
   comments    Comment[]
@@ -61,6 +63,8 @@ model Report {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+
 model Comment {
   id        String   @id @default(uuid())
   text      String
@@ -79,25 +83,43 @@ model Like {
   reportId  String
   createdAt DateTime @default(now())
 
-  @@unique([userId, reportId]) // no duplicate likes
+  @@unique([userId, reportId])
 }
 
 model Action {
-  id                String   @id @default(uuid())
-  user              User     @relation(fields: [userId], references: [id])
-  userId            String
-  type              String
-  metadata          Json?
-  creditsEarned     Int      @default(0)
-  footprintReduced  Int      @default(0)
-  createdAt         DateTime @default(now())
+  id               String   @id @default(uuid())
+  user             User     @relation(fields: [userId], references: [id])
+  userId           String
+  type             String
+  metadata         Json?
+  creditsEarned    Int      @default(0)
+  footprintReduced Int      @default(0)
+  createdAt        DateTime @default(now())
 }
 
 model Notification {
   id        String   @id @default(uuid())
   message   String
   extra     Json?
+  seen      Boolean  @default(false)
   user      User     @relation(fields: [userId], references: [id])
   userId    String
   createdAt DateTime @default(now())
+}
+
+model LocalUpdate {
+  id        String   @id @default(uuid())
+  title     String
+  meta      String?
+  category  String? // FIXED HERE
+  createdAt DateTime @default(now())
+}
+
+model AqiData {
+  id          String   @id @default(uuid())
+  city        String
+  stationName String
+  aqiValue    Int
+  category    String?
+  createdAt   DateTime @default(now())
 }

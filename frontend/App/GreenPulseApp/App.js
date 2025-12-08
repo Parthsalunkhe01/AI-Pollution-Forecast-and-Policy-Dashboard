@@ -8,6 +8,10 @@ import { AuthProvider } from './src/context/AuthContext';
 import { ReportsProvider } from './src/context/ReportsContext';
 import RootNavigator from './src/navigation/RootNavigator';
 
+import * as ImagePicker from "expo-image-picker";
+
+console.log("ENUM CHECK:", ImagePicker.MediaType);
+
 SplashScreenExpo.preventAutoHideAsync().catch(()=>{});
 
 export default function App(){

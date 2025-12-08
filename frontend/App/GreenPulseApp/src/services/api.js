@@ -1,14 +1,37 @@
-// src/services/api.js
+import axios from "axios";
 
-// Replace BASE_URL with your backend if available
-const BASE_URL = 'https://example.com/api';
+// USE HOTSPOT IP — never 10.155.x.x
+export const API_BASE = "http://10.155.209.31:3000/api";
 
-export async function fetchAQI() {
-  // Mocked response for demo. Replace with real API call when backend ready:
-  // return axios.get(`${BASE_URL}/aqi/nearest`).then(res => res.data);
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ aqi: 45, pm25: 22, pm10: 40, no2: 18, location: 'Sample Location' });
-    }, 300);
-  });
+export async function fetchStations() {
+  try {
+    const res = await axios.get(`${API_BASE}/stations/list39`);
+
+    // Defensive check
+    if (!res.data || !res.data.stations) {
+      console.log("Station API returned invalid data:", res.data);
+      return [];
+    }
+
+    return res.data.stations; // <-- ARRAY
+  } catch (err) {
+    console.log("Station load error:", err.message);
+    return [];
+  }
 }
+
+export async function fetchStationForecast(stationName) {
+  try {
+    const res = await fetch(`${API_BASE}/forecast/station`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ station_name: stationName }),
+    });
+
+    return await res.json(); // valid JSON
+  } catch (err) {
+    console.log("Forecast load error:", err.message);
+    return null;
+  }
+}
+

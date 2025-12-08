@@ -39,5 +39,5 @@ export default function VerifyReportsScreen() {
 
 const styles = StyleSheet.create({
   card: { backgroundColor:'#fff', padding:12, borderRadius: RADIUS.md, marginTop:12 },
-  verifyBtn: { marginTop:10, backgroundColor: COLORS.primary, padding:10, borderRadius: RADIUS.md, alignItems:'center' }
+  verifyBtn: { marginTop:10, backgroundColor: COLORS.primary, padding:10, borderRadius: RADIUS.md, alignItems:'center' }
 });

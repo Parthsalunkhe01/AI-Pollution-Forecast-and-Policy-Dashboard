@@ -1,93 +1,44 @@
-const router = require("express").Router();
-const prisma = require("../config/prisma");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { signAccessToken, signRefreshToken } = require("../middleware/auth");
+import express from "express";
+import prisma from "../../config/prisma.js";
+import { authenticateJWT } from "../../middleware/auth.js";
 
-// SIGNUP
-router.post("/signup", async (req, res, next) => {
+const router = express.Router();
+
+/**
+ * POST /api/reports
+ * Create a pollution report
+ */
+router.post("/", authenticateJWT, async (req, res) => {
   try {
-    const { email, password, displayName } = req.body;
+    const { title, description, city, stationName } = req.body;
 
-    const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) return res.status(400).json({ message: "Email already exists" });
-
-    const hash = await bcrypt.hash(password, 10);
-
-    const newUser = await prisma.user.create({
-      data: { email, passwordHash: hash, displayName }
+    const report = await prisma.report.create({
+      data: {
+        title,
+        description,
+        city,
+        stationName,
+        user: {
+          connect: { id: req.userId }   // ⭐ Correct Prisma relation
+        }
+      },
     });
 
-    const accessToken = signAccessToken(newUser);
-    const { token, expiresAt } = signRefreshToken(newUser);
-
-    await prisma.refreshToken.create({
-      data: { token, userId: newUser.id, expiresAt }
-    });
-
-    res.json({ user: newUser, accessToken, refreshToken: token });
+    return res.json({ success: true, id: report.id });
   } catch (err) {
-    next(err);
-  }
-});
-// LOGIN
-router.post("/login", async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await prisma.user.findUnique({ where: { email } });
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
-
-    const match = await bcrypt.compare(password, user.passwordHash);
-    if (!match) return res.status(401).json({ message: "Invalid credentials" });
-
-    const accessToken = signAccessToken(user);
-    const { token, expiresAt } = signRefreshToken(user);
-
-    await prisma.refreshToken.create({
-      data: { token, userId: user.id, expiresAt }
-    });
-
-    res.json({ user, accessToken, refreshToken: token });
-  } catch (err) {
-    next(err);
+    console.error("Report create error:", err);
+    res.status(500).json({ message: "Failed to create report" });
   }
 });
 
-// REFRESH TOKEN
-router.post("/refresh", async (req, res, next) => {
-  try {
-    const { refreshToken } = req.body;
-
-    const dbToken = await prisma.refreshToken.findUnique({
-      where: { token: refreshToken }
-    });
-
-    if (!dbToken) return res.status(401).json({ message: "Invalid refresh token" });
-    if (dbToken.expiresAt < new Date())
-      return res.status(401).json({ message: "Refresh token expired" });
-
-    const user = await prisma.user.findUnique({
-      where: { token: refreshToken }
-    });
- if (!dbToken) return res.status(401).json({ message: "Invalid refresh token" });
-    if (dbToken.expiresAt < new Date())
-      return res.status(401).json({ message: "Refresh token expired" });
-
-    user = await prisma.user.findUnique({ where: { id: dbToken.userId } });
-
-    const accessToken = signAccessToken(user);
-    const { token: newRefresh, expiresAt } = signRefreshToken(user);
-
-    await prisma.refreshToken.update({
-      where: { token: refreshToken },
-      data: { token: newRefresh, expiresAt }
-    });
-
-    res.json({ accessToken, refreshToken: newRefresh });
-  } catch (err) {
-    next(err);
-  }
+/**
+ * GET /api/reports
+ */
+router.get("/", async (_, res) => {
+  const reports = await prisma.report.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  res.json(reports);
 });
 
-module.exports = router;
+export default router;

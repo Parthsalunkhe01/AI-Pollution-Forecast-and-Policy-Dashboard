@@ -81,5 +81,5 @@ const styles = StyleSheet.create({
   title:{ fontSize:24, marginBottom:20, textAlign:'center', fontWeight:'800' },
   input:{ width:'100%', borderWidth:1, borderColor:'#ddd', borderRadius: RADIUS.sm, padding:12, marginTop:10, backgroundColor:'#fff' },
   btn:{ marginTop:16, backgroundColor:COLORS.primary, padding:14, borderRadius: RADIUS.md, width:'100%', alignItems:'center' },
-  btnText:{ color:'#fff', fontWeight:'800' }
+  btnText:{ color:'#fff', fontWeight:'800' }
 });
